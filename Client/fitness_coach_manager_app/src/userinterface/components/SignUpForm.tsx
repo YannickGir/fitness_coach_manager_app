@@ -25,7 +25,7 @@ const handleClick = async (e: FormEvent) => {
 
   return (
     <div className='wrapper' >
-        <h1>Sign Up </h1>
+        
         <form className='forms'>
   <label>
    <h2> Username </h2> 
