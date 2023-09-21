@@ -1,0 +1,79 @@
+.App {
+    height: 100vh;
+    display: flex;
+   
+    justify-content: center;
+    align-items: center;
+}
+
+.wrapmovies {
+   
+    display: flex; 
+    justify-content: center;
+    max-width: 200px;
+}
+
+button {
+    align-self: center;
+    margin: 20px;
+    padding: 10px;
+    justify-content: space-between;
+}
+
+.movies {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    perspective: 500px;
+    
+   
+}
+
+img {
+    height: 300px;
+    width: 200px;
+    object-fit: cover;
+    background-color: bisque;
+    clip-path: circle(90% at 0 0);
+    transition: all 2s ease;
+}
+img:hover{
+    clip-path: circle(100%);
+}
+
+.Update {
+    border: none;
+    background-color: rgb(205, 235, 235);
+}
+
+.Delete {
+    border: none;
+    background-color: rgb(235, 214, 214);
+    cursor: pointer;
+}
+
+.undermovies {
+    animation: rotateAnimation 2s ease;
+    /* transition: all 3s ease; */
+    
+}
+
+@keyframes rotateAnimation {
+    from {
+      transform: rotateX(100deg);
+    }
+    to {
+      transform: rotateX(0deg);
+    }
+  }
+
+  .wrapcover {
+    height: 300px;
+    width: 200px;
+    background-size: cover;
+  }
+
+  .custom-h1 {
+    font-size: 36px;
+}
