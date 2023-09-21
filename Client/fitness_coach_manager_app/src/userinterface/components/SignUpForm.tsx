@@ -1,5 +1,5 @@
 "use client"
-
+import {Profile, SignUpFormProps} from '../../domain/entities/auth.types'
 const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUp }) => {
 
 

@@ -1,6 +1,6 @@
 "use client"
 
-
+import {Profile, SignInFormProps} from '../../domain/entities/auth.types'
 const SignInForm: React.FC<SignInFormProps> = ({ onSignIn }) => {
 
   return (
