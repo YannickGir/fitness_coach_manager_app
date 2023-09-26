@@ -24,6 +24,7 @@
     "tailwindcss": "3.3.3"
   },
   "devDependencies": {
+    "tsc-watch": "^6.0.4",
     "typescript": "^5.2.2"
   }
 }
