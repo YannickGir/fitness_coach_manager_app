@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const database_1 = __importDefault(require("./config/database"));
+const authRoute = require('./api/routes/authRoutes');
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const db = (0, database_1.default)();
@@ -18,6 +19,7 @@ app.get("/user_table", (req, res) => {
         return res.json(data);
     });
 });
+app.use('/authenticate', authRoute);
 app.use(express_1.default.json()); //to send datas from client in json form
 app.use((0, cors_1.default)());
 app.get("/", (req, res) => {

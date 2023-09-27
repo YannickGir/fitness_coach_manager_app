@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { Request, Response } from 'express';
 import createDatabaseConnection  from './config/database';
 import mysql from "mysql2"
+const authRoute = require('./api/routes/authRoutes'); 
 
 dotenv.config();
 
@@ -19,6 +20,8 @@ app.get("/user_table", (req: Request, res: Response)=> {
     })
 })
 
+app.use('/authenticate', authRoute);
+
 app.use(express.json());  //to send datas from client in json form
 app.use(cors());
 app.get("/", (req, res) => {
@@ -28,3 +31,4 @@ app.get("/", (req, res) => {
 app.listen(8800, ()=>
 console.log("connected to the server !")
 )
+
