@@ -18,11 +18,9 @@ export const getUsers = async(req: Request, res: Response)=> {
 
 export const loginUser = async (req: Request, res: Response) => {
     const { username, password_hash, email } = req.body;
-
     const q = "SELECT * FROM user_table WHERE (username = ? OR email = ?)";
     db.query(q, [username, email], (err, results, fields) => {
       if (err) {
-        // Une erreur s'est produite lors de l'exécution de la requête
         console.error(err);
         return res.status(500).json({ message: "Erreur de serveur lors de l'authentification." });
       }
@@ -30,25 +28,69 @@ export const loginUser = async (req: Request, res: Response) => {
       if (Array.isArray(results) && results.length > 0) {
         const user = results[0] as { password_hash: string };
   
-        // Comparez le mot de passe fourni avec celui stocké en base de données
         bcrypt.compare(password_hash, user.password_hash, function(err:Error|undefined, result:Boolean) {
           if (err) {
-            // Une erreur s'est produite lors de la comparaison
             console.error(err);
             return res.status(500).json({ message: "Erreur de serveur lors de l'authentification." });
           }
   
           if (result === true) {
-            // Mot de passe correct : l'utilisateur est authentifié avec succès
             res.json({ message: "L'authentification a réussi !" });
           } else {
-            // Mot de passe incorrect
             return res.status(401).json({ message: "L'authentification a échoué. Vérifiez vos informations d'identification." });
           }
         });
       } else {
-        // Aucun utilisateur correspondant n'a été trouvé
         return res.status(401).json({ message: "L'authentification a échoué. Vérifiez vos informations d'identification." });
       }
     });
   };
+
+export const SignUpUser = async(req:Request, res:Response)=>{
+    bcrypt.genSalt(saltRounds, function(err: Error | undefined, salt: string) {
+        if (err) 
+            {
+            console.error(err);
+            return res.status(500).json({ message: "Erreur lors de l'inscription salt." });
+            }
+        const myPlaintextPassword = req.body.password_hash;
+        bcrypt.hash(myPlaintextPassword, salt, function(err: Error | undefined, hashedPassword: string) 
+        {
+            if (err) 
+            {
+                console.error(err);
+                return res.status(500).json({ message: "Erreur lors de l'inscription hash." });
+            }
+            const values = 
+            [
+                req.body.username,
+                req.body.email,
+                hashedPassword,
+                req.body.created_at,
+            ]
+            const sql = "SELECT COUNT(*) AS count FROM user_table WHERE email = ?";
+            db.query(sql, [values[1]], (error, results:any)=> {
+                const count = results[0].count;
+                const emailExists = count === 1;
+                if (emailExists) 
+                {
+                    console.log ("email Exists")
+                }
+                else 
+                {
+                    const q = "INSERT INTO user_table (`username`,`email`,`password_hash`,`created_at`) VALUES (?)"
+                    db.query(q, [values], (err, data) => {
+                        if (err) 
+                        {
+                            console.error(err);
+                            return res.status(500).json({ message: "Erreur lors de l'inscription INSERT INTO." });
+                        }
+                        return res.status(200).json({ message: "L'utilisateur a été créé avec succès !" });
+                    });
+                }
+            })
+        });
+    });
+
+    
+};

@@ -20,13 +20,20 @@ router.get("/user_table", (req, res) => __awaiter(void 0, void 0, void 0, functi
 }));
 router.post('/authenticate', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Vous pouvez appeler la méthode loginUser de authController ici
         const result = yield (0, authController_1.loginUser)(req, res);
     }
     catch (error) {
-        // Gérez les erreurs ici
         console.error(error);
         res.status(500).json({ message: 'Erreur lors de l\'authentification' });
+    }
+}));
+router.post('/signUp', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield (0, authController_1.SignUpUser)(req, res);
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Erreur lors de l\'inscription' });
     }
 }));
 router.post('/logout', (req, res) => {

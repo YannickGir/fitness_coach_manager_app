@@ -34,13 +34,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/CustomPopup', (req, res) => {
-    // Code pour gérer la page ou le contenu du pop-up CustomPopup
-    // Vous pouvez renvoyer une page HTML ou un JSON avec le message d'erreur.
+   //revoit vers une page etc... ici
     const errorMessage = req.query.message || 'Erreur inconnue';
     res.status(404).json({ message: errorMessage });
   });
-
-  app.use('/user_table', authRoute);
 
 app.use('/api', authRoute)
 

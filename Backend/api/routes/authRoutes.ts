@@ -1,6 +1,6 @@
 
 import express from 'express';
-import { loginUser, getUsers } from '../controllers/authController';
+import { loginUser, getUsers, SignUpUser } from '../controllers/authController';
 import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 
@@ -13,14 +13,22 @@ router.get("/user_table", async (req: Request, res: Response)=> {
 
 router.post('/authenticate', async (req, res) => {
     try {
-      // Vous pouvez appeler la méthode loginUser de authController ici
       const result = await loginUser(req, res);
     } catch (error) {
-      // Gérez les erreurs ici
       console.error(error);
       res.status(500).json({ message: 'Erreur lors de l\'authentification' });
     }
   });
+
+  router.post('/signUp', async (req, res)=>{
+    try {
+        const result = await SignUpUser(req, res);
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({message: 'Erreur lors de l\'inscription'});
+    }
+  })
 
   router.post('/logout', (req, res) => {
     // Détruire la session
