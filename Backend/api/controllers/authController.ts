@@ -5,8 +5,16 @@ import { ParsedQs } from 'qs';
 
 
 
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 const saltRounds = 10;
+
+export const getUsers = async(req: Request, res: Response)=> {
+    const q = "SELECT * FROM fitness_coach_manager_app.user_table;"
+    db.query(q, (err: Error, data: String)=>{
+        if(err) return res.json(err)
+        return res.json (data)
+    })
+}
 
 export const loginUser = async (req: Request, res: Response) => {
     const { username, password_hash, email } = req.body;
@@ -23,7 +31,7 @@ export const loginUser = async (req: Request, res: Response) => {
         const user = results[0] as { password_hash: string };
   
         // Comparez le mot de passe fourni avec celui stocké en base de données
-        bcrypt.compare(password_hash, user.password_hash, function(err:Error, result:Boolean) {
+        bcrypt.compare(password_hash, user.password_hash, function(err:Error|undefined, result:Boolean) {
           if (err) {
             // Une erreur s'est produite lors de la comparaison
             console.error(err);

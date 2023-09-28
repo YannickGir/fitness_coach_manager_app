@@ -1,10 +1,14 @@
 
 import express from 'express';
-import { loginUser } from '../controllers/authController';
+import { loginUser, getUsers } from '../controllers/authController';
 import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 
 const router = express.Router();
+
+router.get("/user_table", async (req: Request, res: Response)=> {
+    const result = await getUsers(req, res);
+})
 
 router.post('/authenticate', async (req, res) => {
     try {
@@ -19,7 +23,7 @@ router.post('/authenticate', async (req, res) => {
       res.status(500).json({ message: 'Erreur lors de l\'authentification' });
     }
   });
-
-  export default router;
+  
+  module.exports = router;
   
 

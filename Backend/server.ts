@@ -7,20 +7,31 @@ import createDatabaseConnection  from './config/database';
 import mysql from "mysql2"
 const authRoute = require('./api/routes/authRoutes'); 
 
+const bodyParser = require('body-parser');
+
+
 dotenv.config();
 
 const app = express()
 const db = createDatabaseConnection();
 
-app.get("/user_table", (req: Request, res: Response)=> {
-    const q = "SELECT * FROM fitness_coach_manager_app.user_table;"
-    db.query(q, (err: Error, data: String)=>{
-        if(err) return res.json(err)
-        return res.json (data)
-    })
-})
+app.use(cors({ origin: 'http://localhost:3000' }));
 
-app.use('/authenticate', authRoute);
+import bcrypt from 'bcrypt';
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.get('/CustomPopup', (req, res) => {
+    // Code pour gérer la page ou le contenu du pop-up CustomPopup
+    // Vous pouvez renvoyer une page HTML ou un JSON avec le message d'erreur.
+    const errorMessage = req.query.message || 'Erreur inconnue';
+    res.status(404).json({ message: errorMessage });
+  });
+
+  app.use('/user_table', authRoute);
+
+app.use('/api', authRoute)
 
 app.use(express.json());  //to send datas from client in json form
 app.use(cors());

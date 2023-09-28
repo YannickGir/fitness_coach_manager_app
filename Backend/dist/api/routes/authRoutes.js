@@ -15,6 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const authController_1 = require("../controllers/authController");
 const router = express_1.default.Router();
+router.get("/user_table", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield (0, authController_1.getUsers)(req, res);
+}));
 router.post('/authenticate', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Vous pouvez appeler la méthode loginUser de authController ici
@@ -28,4 +31,4 @@ router.post('/authenticate', (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.status(500).json({ message: 'Erreur lors de l\'authentification' });
     }
 }));
-exports.default = router;
+module.exports = router;
