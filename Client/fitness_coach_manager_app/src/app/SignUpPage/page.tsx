@@ -14,7 +14,7 @@ export const SignUpPage : React.FC = () => {
       console.log('Tentative de connexion avec username :', username, 'et password :', password_hash);
     
       try {
-        const response = await axios.post("http://localhost:8800/sign_up", {
+        const response = await axios.post("http://localhost:8800/api/signUp", {
           username,
           password_hash,
           email,
