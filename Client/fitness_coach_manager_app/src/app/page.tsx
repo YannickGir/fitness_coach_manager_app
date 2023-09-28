@@ -16,21 +16,24 @@ function HomePage() {
         console.log('Tentative de connexion avec username :', username, 'et password :', password_hash);
       
         try {
-          const response = await axios.post("http://localhost:8800/authenticate", {
+          const response = await axios.post("http://localhost:8800/api/authenticate", {
             username,
             password_hash,
             email,
           });
+          console.log('Statut de la réponse :', response.status);
     
           if (response.status === 200) {
             router.push('Dashboard'); 
           } else {
-            console.error('Erreur d\'authentification :', response.data);
-            router.push(`/CustomPopup?message=${response.data.message}`);
+            // console.error('Erreur d\'authentification :', response.data);
+            // router.push(`/CustomPopup?message=${response.data.message}`);
+            console.log('Erreur lors de la connexion');
           }
         } catch (err) {
-          console.error('Erreur lors de la connexion :', err);
-          router.push(`/CustomPopup?message=Erreur lors de la connexion.`);
+        //   console.error('Erreur lors de la connexion :', err);
+        //   router.push(`/CustomPopup?message=Erreur lors de la connexion.`);
+          console.log('Erreur lors de la connexion');
         }
       
       };
