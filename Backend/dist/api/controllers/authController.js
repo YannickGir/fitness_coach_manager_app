@@ -46,7 +46,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 }
                 if (result === true) {
                     // Mot de passe correct : l'utilisateur est authentifié avec succès
-                    return res.status(200).json({ message: "L'authentification a réussi !" });
+                    res.json({ message: "L'authentification a réussi !" });
                 }
                 else {
                     // Mot de passe incorrect

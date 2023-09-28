@@ -22,8 +22,6 @@ router.post('/authenticate', (req, res) => __awaiter(void 0, void 0, void 0, fun
     try {
         // Vous pouvez appeler la méthode loginUser de authController ici
         const result = yield (0, authController_1.loginUser)(req, res);
-        // Utilisez le résultat de la méthode loginUser ici
-        res.status(200).json(result);
     }
     catch (error) {
         // Gérez les erreurs ici
@@ -31,4 +29,16 @@ router.post('/authenticate', (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.status(500).json({ message: 'Erreur lors de l\'authentification' });
     }
 }));
+router.post('/logout', (req, res) => {
+    // Détruire la session
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Erreur lors de la déconnexion :', err);
+            return res.status(500).json({ message: 'Erreur lors de la déconnexion' });
+        }
+        // Effacer le cookie de session
+        res.clearCookie('connect.sid');
+        res.status(200).json({ message: 'Déconnexion réussie' });
+    });
+});
 module.exports = router;

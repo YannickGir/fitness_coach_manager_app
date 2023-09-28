@@ -40,7 +40,7 @@ export const loginUser = async (req: Request, res: Response) => {
   
           if (result === true) {
             // Mot de passe correct : l'utilisateur est authentifié avec succès
-            return res.status(200).json({ message: "L'authentification a réussi !" });
+            res.json({ message: "L'authentification a réussi !" });
           } else {
             // Mot de passe incorrect
             return res.status(401).json({ message: "L'authentification a échoué. Vérifiez vos informations d'identification." });

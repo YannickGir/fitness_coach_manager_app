@@ -7,11 +7,21 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const database_1 = __importDefault(require("./config/database"));
+const express_session_1 = __importDefault(require("express-session"));
 const authRoute = require('./api/routes/authRoutes');
 const bodyParser = require('body-parser');
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const db = (0, database_1.default)();
+app.use((0, express_session_1.default)({
+    secret: 'votre_secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: false,
+        maxAge: 3600000, // Durée de validité du cookie en millisecondes (ici, 1 heure)
+    },
+}));
 app.use((0, cors_1.default)({ origin: 'http://localhost:3000' }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
