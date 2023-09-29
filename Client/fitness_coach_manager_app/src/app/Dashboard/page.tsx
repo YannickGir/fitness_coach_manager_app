@@ -2,10 +2,20 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 
 export const Dashboard = () => {
     const router = useRouter();
+    const [authenticated, setAuthenticated] = useState(false);
+    useEffect(() => {
+        const userSession = localStorage.getItem('userSession');
+        if (userSession) {
+          setAuthenticated(true);
+        } else {
+          router.push('/'); // Redirigez vers la page de connexion si l'utilisateur n'est pas authentifié
+        }
+      }, []);
     const handleLogout = async () => {
         try {
           const response = await fetch('http://localhost:8800/api/logout', {
@@ -16,6 +26,7 @@ export const Dashboard = () => {
           });
     
           if (response.status === 200) {
+            localStorage.removeItem('userSession');
             router.push('/'); 
           } else {
             console.error('Erreur lors de la déconnexion :', response.statusText);

@@ -7,11 +7,11 @@ import Link from 'next/link';
 import './App.css';
 import "./style.css";
 import CustomPopup from '@/userinterface/components/CustomPopup';
-
+import { useState } from 'react';
 
 function HomePage() {
     const router = useRouter();
-
+    const [authenticated, setAuthenticated] = useState(false);
     const handleSignIn = async (username: string, password_hash: string, email:string) => {
         console.log('Tentative de connexion avec username :', username, 'et password :', password_hash);
       
@@ -24,6 +24,7 @@ function HomePage() {
           console.log('Statut de la réponse :', response.status);
     
           if (response.status === 200) {
+            localStorage.setItem('userSession', 'userSession');
             router.push('Dashboard'); 
           } else {
             // console.error('Erreur d\'authentification :', response.data);
@@ -35,7 +36,6 @@ function HomePage() {
         //   router.push(`/CustomPopup?message=Erreur lors de la connexion.`);
           console.log('Erreur lors de la connexion');
         }
-      
       };
 
     return (
