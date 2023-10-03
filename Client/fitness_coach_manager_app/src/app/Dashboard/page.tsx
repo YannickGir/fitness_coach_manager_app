@@ -3,19 +3,25 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import LoadinPage from '../LoadingPage/page';
 
 
 export const Dashboard = () => {
     const router = useRouter();
     const [authenticated, setAuthenticated] = useState(false);
+    const [loading, setLoading] = useState(true)
+
     useEffect(() => {
         const userSession = localStorage.getItem('userSession');
         if (userSession) {
           setAuthenticated(true);
         } else {
-          router.push('/'); // Redirigez vers la page de connexion si l'utilisateur n'est pas authentifié
+          router.push('/'); 
         }
-      }, []);
+        setTimeout(() => {
+            setLoading(false); 
+          }, 2000);
+        }, []);
     const handleLogout = async () => {
         try {
           const response = await fetch('http://localhost:8800/api/logout', {
@@ -35,6 +41,13 @@ export const Dashboard = () => {
           console.error('Erreur lors de la déconnexion :', error);
         }
       };
+
+      if(loading) {
+        return <LoadinPage/>
+      }
+
+     
+     
   return (
     <div className="App">
         <div className='wrapper'>

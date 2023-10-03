@@ -8,11 +8,14 @@ import './App.css';
 import "./style.css";
 import CustomPopup from '@/userinterface/components/CustomPopup';
 import { useState } from 'react';
+import LoadingPage from './LoadingPage/page';
 
 function HomePage() {
     const router = useRouter();
     const [authenticated, setAuthenticated] = useState(false);
+    const [loading, setLoading] = useState(false);
     const handleSignIn = async (username: string, password_hash: string, email:string) => {
+        setLoading(true);
         console.log('Tentative de connexion avec username :', username, 'et password :', password_hash);
       
         try {
@@ -27,23 +30,35 @@ function HomePage() {
             localStorage.setItem('userSession', 'userSession');
             router.push('Dashboard'); 
           } else {
-            // console.error('Erreur d\'authentification :', response.data);
-            // router.push(`/CustomPopup?message=${response.data.message}`);
             console.log('Erreur lors de la connexion');
           }
         } catch (err) {
-        //   console.error('Erreur lors de la connexion :', err);
-        //   router.push(`/CustomPopup?message=Erreur lors de la connexion.`);
           console.log('Erreur lors de la connexion');
+        } finally {
+            setTimeout(() => {
+                setLoading(false);
+              }, 2000);
         }
       };
 
+      let display: JSX.Element | null = null;
+
+if (loading) {
+  display = <LoadingPage />;
+} else if (authenticated) {
+  router.push('/dashboard');
+} else {
+  display = (
+    <div className='wrapper'>
+      <h1 className="custom-h1">Welcome to SignInPage</h1>
+      <SignInForm onSignIn={handleSignIn} /> <br />
+      <Link href="./SignUpPage">Inscription</Link>
+    </div>
+  );
+}
     return (
         <div className="App">
-            <div className='wrapper'>  <h1 className="custom-h1">Welcome to SignInPage</h1> 
-        <SignInForm onSignIn={handleSignIn} /> <br/>
-        <Link href="./SignUpPage">     Inscription
-    </Link></div>
+           {display}
        
       </div>
     );
