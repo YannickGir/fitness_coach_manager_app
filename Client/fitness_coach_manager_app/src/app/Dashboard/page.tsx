@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import LoadinPage from '../LoadingPage/page';
-
+import './dashboard.css';
 
 export const Dashboard = () => {
     const router = useRouter();
