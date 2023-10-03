@@ -7,13 +7,22 @@ import Link from 'next/link';
 import './App.css';
 import "./style.css";
 import CustomPopup from '@/userinterface/components/CustomPopup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LoadingPage from './LoadingPage/page';
 
 function HomePage() {
     const router = useRouter();
     const [authenticated, setAuthenticated] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const userSession = localStorage.getItem('userSession');
+        if (userSession) {
+          setAuthenticated(true);
+          router.push('Dashboard'); 
+        }
+      }, [router]);
+
     const handleSignIn = async (username: string, password_hash: string, email:string) => {
         setLoading(true);
         console.log('Tentative de connexion avec username :', username, 'et password :', password_hash);
@@ -46,7 +55,7 @@ function HomePage() {
 if (loading) {
   display = <LoadingPage />;
 } else if (authenticated) {
-  router.push('/dashboard');
+  display= null;
 } else {
   display = (
     <div className='wrapper'>

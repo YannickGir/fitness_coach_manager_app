@@ -4,12 +4,19 @@ import SignUpForm from '@/userinterface/components/SignUpForm'
 import axios from 'axios'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export const SignUpPage : React.FC = () => {
 
     const router = useRouter();  //to send to a different page after clicking
-      
-    
+    const [authenticated, setAuthenticated] = useState(false);  
+    useEffect(() => {
+        const userSession = localStorage.getItem('userSession');
+        if (userSession) {
+          setAuthenticated(true);
+          router.push('Dashboard'); // Rediriger vers la page de tableau de bord si l'utilisateur est déjà connecté.
+        }
+      }, [router]);
     const handleSignUp = async (username: string, password_hash: string, email:string) => {
       console.log('Tentative de connexion avec username :', username, 'et password :', password_hash);
     
