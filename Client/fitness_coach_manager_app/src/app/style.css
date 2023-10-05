@@ -77,3 +77,8 @@ img:hover{
   .custom-h1 {
     font-size: 36px;
 }
+
+@media screen and (max-width:200px) {
+    .custom-h1 {
+        font-size: 20px}
+}
