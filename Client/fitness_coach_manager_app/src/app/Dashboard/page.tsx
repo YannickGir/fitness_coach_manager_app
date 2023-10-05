@@ -21,7 +21,7 @@ export const Dashboard = () => {
         setTimeout(() => {
             setLoading(false); 
           }, 2000);
-        }, []);
+        }, [router]);
     const handleLogout = async () => {
         try {
           const response = await fetch('http://localhost:8800/api/logout', {

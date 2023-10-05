@@ -7,19 +7,21 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export const SignUpPage : React.FC = () => {
-
-    const router = useRouter();  //to send to a different page after clicking
+    const router = useRouter(); 
     const [authenticated, setAuthenticated] = useState(false);  
+
     useEffect(() => {
+    if (typeof window !== 'undefined') {
         const userSession = localStorage.getItem('userSession');
-        if (userSession) {
+    if (userSession) {
           setAuthenticated(true);
-          router.push('Dashboard'); // Rediriger vers la page de tableau de bord si l'utilisateur est déjà connecté.
+          router.push('/Dashboard');
+            }
         }
       }, [router]);
+
     const handleSignUp = async (username: string, password_hash: string, email:string) => {
       console.log('Tentative de connexion avec username :', username, 'et password :', password_hash);
-    
       try {
         const response = await axios.post("http://localhost:8800/api/signUp", {
           username,
@@ -28,6 +30,7 @@ export const SignUpPage : React.FC = () => {
         });
   
         if (response.status === 200) {
+            localStorage.setItem('userSession', 'userSession');
           // L'utilisateur est inscrit avec succès.
           router.push('Dashboard'); // Exemple de redirection vers la page de tableau de bord.
         } else {

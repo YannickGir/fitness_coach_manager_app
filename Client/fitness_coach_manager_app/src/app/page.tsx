@@ -37,7 +37,7 @@ function HomePage() {
     
           if (response.status === 200) {
             localStorage.setItem('userSession', 'userSession');
-            router.push('Dashboard'); 
+            router.push('/Dashboard'); 
           } else {
             console.log('Erreur lors de la connexion');
           }
