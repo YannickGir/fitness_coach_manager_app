@@ -18,13 +18,13 @@ const router = express_1.default.Router();
 router.get("/user_table", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield (0, authController_1.getUsers)(req, res);
 }));
-router.post('/authenticate', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/authenticate', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield (0, authController_1.loginUser)(req, res);
+        const result = yield (0, authController_1.loginUser)(req, res, next);
     }
     catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Erreur lors de l\'authentification' });
+        res.json({ message: 'Erreur lors de l\'authentification' });
     }
 }));
 router.post('/signUp', (req, res) => __awaiter(void 0, void 0, void 0, function* () {

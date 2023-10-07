@@ -26,23 +26,33 @@ const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.getUsers = getUsers;
-const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+//J'AI INITIALISE JWT UNIQUEMENT DANS LIGINUSER POUR LE MOMENT, LE FAIRE ENSUITE DANS SINGUP APRES VERIFICATION QUE CA MARCHE
+//ET AJOUTER UNE VERIFICATION DE TOKEN AUSSI (CREER MIDDLEWARE ET L'AJOUTER ICI A LOGINUSER)
+const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password_hash, email } = req.body;
     const q = "SELECT * FROM user_table WHERE (username = ? OR email = ?)";
     db.query(q, [username, email], (err, results, fields) => {
         if (err) {
             console.error(err);
-            return res.status(500).json({ message: "Erreur de serveur lors de l'authentification." });
+            res.status(500).json({ message: "Erreur de serveur lors de l'authentification." });
+            return;
         }
         if (Array.isArray(results) && results.length > 0) {
             const user = results[0];
             bcrypt_1.default.compare(password_hash, user.password_hash, function (err, result) {
                 if (err) {
                     console.error(err);
-                    return res.status(500).json({ message: "Erreur de serveur lors de l'authentification." });
+                    res.status(500).json({ message: "Erreur de serveur lors de l'authentification." });
+                    return;
                 }
                 if (result === true) {
+                    // const userData = {
+                    //     email: email,
+                    //     username: username,
+                    //   };
+                    //   generateAndStoreToken(req, res, userData, next); 
                     res.json({ message: "L'authentification a réussi !" });
+                    return;
                 }
                 else {
                     return res.status(401).json({ message: "L'authentification a échoué. Vérifiez vos informations d'identification." });
@@ -50,7 +60,8 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             });
         }
         else {
-            return res.status(401).json({ message: "L'authentification a échoué. Vérifiez vos informations d'identification." });
+            res.status(401).json({ message: "L'authentification a échoué. Vérifiez vos informations d'identification." });
+            return;
         }
     });
 });

@@ -19,7 +19,7 @@ app.use((0, express_session_1.default)({
     saveUninitialized: true,
     cookie: {
         secure: false,
-        maxAge: 3600000, // Durée de validité du cookie en millisecondes (ici, 1 heure)
+        maxAge: 3600000, // Durée de validité du cookie en millisecondes
     },
 }));
 app.use((0, cors_1.default)({ origin: 'http://localhost:3000' }));

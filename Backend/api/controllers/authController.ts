@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import createDatabaseConnection from '../../config/database';
 const db = createDatabaseConnection();
 import { ParsedQs } from 'qs';
-
+import { generateAndStoreToken} from "../middleware/authMiddleware";
 
 
 import bcrypt from 'bcrypt';
@@ -16,13 +16,19 @@ export const getUsers = async(req: Request, res: Response)=> {
     })
 }
 
-export const loginUser = async (req: Request, res: Response) => {
+
+//J'AI INITIALISE JWT UNIQUEMENT DANS LIGINUSER POUR LE MOMENT, LE FAIRE ENSUITE DANS SINGUP APRES VERIFICATION QUE CA MARCHE
+//ET AJOUTER UNE VERIFICATION DE TOKEN AUSSI (CREER MIDDLEWARE ET L'AJOUTER ICI A LOGINUSER)
+
+
+export const loginUser = async (req: Request, res: Response, next: (() => void)) => {
     const { username, password_hash, email } = req.body;
     const q = "SELECT * FROM user_table WHERE (username = ? OR email = ?)";
     db.query(q, [username, email], (err, results, fields) => {
       if (err) {
         console.error(err);
-        return res.status(500).json({ message: "Erreur de serveur lors de l'authentification." });
+        res.status(500).json({ message: "Erreur de serveur lors de l'authentification." });
+        return 
       }
   
       if (Array.isArray(results) && results.length > 0) {
@@ -31,18 +37,26 @@ export const loginUser = async (req: Request, res: Response) => {
         bcrypt.compare(password_hash, user.password_hash, function(err:Error|undefined, result:Boolean) {
           if (err) {
             console.error(err);
-            return res.status(500).json({ message: "Erreur de serveur lors de l'authentification." });
+            res.status(500).json({ message: "Erreur de serveur lors de l'authentification." });
+            return 
           }
   
           if (result === true) {
-            res.json({ message: "L'authentification a réussi !" });
+           
+            // const userData = {
+            //     email: email,
+            //     username: username,
+            //   };
+            //   generateAndStoreToken(req, res, userData, next); 
+              res.json({ message: "L'authentification a réussi !" });
+              return
           } else {
             return res.status(401).json({ message: "L'authentification a échoué. Vérifiez vos informations d'identification." });
           }
         });
       } else {
-        return res.status(401).json({ message: "L'authentification a échoué. Vérifiez vos informations d'identification." });
-      }
+        res.status(401).json({ message: "L'authentification a échoué. Vérifiez vos informations d'identification." });
+      return }
     });
   };
 

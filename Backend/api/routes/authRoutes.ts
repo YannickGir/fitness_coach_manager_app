@@ -3,8 +3,6 @@ import express from 'express';
 import { loginUser, getUsers, SignUpUser } from '../controllers/authController';
 import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
-import jwt from 'jsonwebtoken';
-import { generateToken } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
@@ -13,23 +11,12 @@ router.get("/user_table", async (req: Request, res: Response)=> {
     const result = await getUsers(req, res);
 })
 
-router.post('/authenticate', async (req, res) => {
+router.post('/authenticate', async (req, res, next) => {
     try {
-      const result = await loginUser(req, res);
-  
-      // Si la connexion est réussie, générer un token JWT
-      if (result.success) {
-        const userId = result.userId; // Vous devez extraire l'ID de l'utilisateur réussi depuis result
-        const token = generateToken(userId); // Générez le token JWT en utilisant la fonction generateToken
-  
-        // Envoyez le token dans la réponse au client
-        res.json({ message: 'Authentification réussie', token });
-      } else {
-        res.status(401).json({ message: 'L\'authentification a échoué. Vérifiez vos informations d\'identification.' });
-      }
+      const result = await loginUser(req, res, next);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Erreur lors de l\'authentification' });
+      res.json({ message: 'Erreur lors de l\'authentification' });
     }
   });
 
