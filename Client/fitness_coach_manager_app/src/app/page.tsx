@@ -1,3 +1,4 @@
+
 "use client"
 
 import SignInForm from '@/userinterface/components/SignInForm'
@@ -9,6 +10,7 @@ import "./style.css";
 import CustomPopup from '@/userinterface/components/CustomPopup';
 import { useEffect, useState } from 'react';
 import LoadingPage from './LoadingPage/page';
+import Cookies from 'js-cookie';
 
 function HomePage() {
     const router = useRouter();
@@ -23,6 +25,8 @@ function HomePage() {
         }
       }, [router]);
 
+    
+
     const handleSignIn = async (username: string, password_hash: string, email:string) => {
         setLoading(true);
         console.log('Tentative de connexion avec username :', username, 'et password :', password_hash);
@@ -36,13 +40,23 @@ function HomePage() {
           console.log('Statut de la réponse :', response.status);
     
           if (response.status === 200) {
-            localStorage.setItem('userSession', 'userSession');
+            // console.log('username dans try' + username)
+            // alert(JSON.stringify("vous êtes connecté !"))
+            //to manage redirection to Dashboard if session ok :
+            const { token } = response.data;
+            localStorage.setItem('userSession', token);
+
+            //to manage storage of JWT token:
+            Cookies.set('usernameCookie', username);
+            const storedUsername = Cookies.get('usernameCookie');
+            alert('Nom de l\'utilisateur'+ username +'stocké dans le cookie : ' + storedUsername);
+            
             router.push('/Dashboard'); 
           } else {
-            console.log('Erreur lors de la connexion');
+            console.log('Erreur lors de la connexion dans try');
           }
         } catch (err) {
-          console.log('Erreur lors de la connexion');
+        //   console.log('Erreur lors de la connexion dans catch', err);
         } finally {
             setTimeout(() => {
                 setLoading(false);

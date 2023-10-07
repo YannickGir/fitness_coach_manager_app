@@ -1,3 +1,4 @@
+
 "use client"
 
 import Link from 'next/link';
@@ -32,6 +33,7 @@ export const Dashboard = () => {
           });
     
           if (response.status === 200) {
+            alert(JSON.stringify("vous êtes déconnecté !"))
             localStorage.removeItem('userSession');
             router.push('/'); 
           } else {

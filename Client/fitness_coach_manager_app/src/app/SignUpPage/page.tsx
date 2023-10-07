@@ -5,6 +5,8 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+
 
 export const SignUpPage : React.FC = () => {
     const router = useRouter(); 
@@ -30,9 +32,15 @@ export const SignUpPage : React.FC = () => {
         });
   
         if (response.status === 200) {
-            localStorage.setItem('userSession', 'userSession');
-          // L'utilisateur est inscrit avec succès.
-          router.push('Dashboard'); // Exemple de redirection vers la page de tableau de bord.
+            //to manage redirection to Dashboard if session ok :
+            const { token } = response.data;
+            console.log(token)
+            localStorage.setItem('userSession', token);
+            //to manage storage of JWT token:
+          Cookies.set('usernameCookie', username);
+            const storedUsername = Cookies.get('usernameCookie');
+            alert('Nom de l\'utilisateur'+ username +'stocké dans le cookie : ' + storedUsername);
+          router.push('Dashboard');
         } else {
           // Gérer les erreurs d'inscription ici.
           console.error('Erreur d\'inscription :', response.data);
