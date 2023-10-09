@@ -1,8 +1,11 @@
 
+//authRoutes
+
 import express from 'express';
 import { loginUser, getUsers, SignUpUser } from '../controllers/authController';
 import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
+import { verifyToken } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
@@ -14,6 +17,7 @@ router.get("/user_table", async (req: Request, res: Response)=> {
 router.post('/authenticate', async (req, res, next) => {
     try {
       const result = await loginUser(req, res, next);
+      return res.status(200).json("connexion réussie !")
     } catch (error) {
       console.error(error);
       res.json({ message: 'Erreur lors de l\'authentification' });
@@ -30,7 +34,7 @@ router.post('/signUp', async (req, res)=>{
     }
   })
 
-router.post('/logout', (req, res) => {
+router.post('/logout', verifyToken, (req, res) => {
     // Détruire la session
     req.session.destroy((err) => {
       if (err) {
@@ -39,8 +43,7 @@ router.post('/logout', (req, res) => {
       }
       
       // Effacer le cookie de session
-      res.clearCookie('connect.sid');
-  
+      res.clearCookie('jwtToken', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
       res.status(200).json({ message: 'Déconnexion réussie' });
     });
   });

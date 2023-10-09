@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import createDatabaseConnection  from './config/database';
 import session from 'express-session';
 const authRoute = require('./api/routes/authRoutes'); 
-
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 
@@ -13,7 +13,7 @@ dotenv.config();
 
 const app = express()
 const db = createDatabaseConnection();
-
+app.use(cookieParser());
 app.use(session({
     secret: 'votre_secret',
     resave: false,

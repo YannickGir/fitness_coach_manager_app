@@ -9,10 +9,12 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const database_1 = __importDefault(require("./config/database"));
 const express_session_1 = __importDefault(require("express-session"));
 const authRoute = require('./api/routes/authRoutes');
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const db = (0, database_1.default)();
+app.use(cookieParser());
 app.use((0, express_session_1.default)({
     secret: 'votre_secret',
     resave: false,

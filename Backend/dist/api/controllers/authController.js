@@ -1,4 +1,5 @@
 "use strict";
+//authController
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -15,6 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SignUpUser = exports.loginUser = exports.getUsers = void 0;
 const database_1 = __importDefault(require("../../config/database"));
 const db = (0, database_1.default)();
+const authMiddleware_1 = require("../middleware/authMiddleware");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const saltRounds = 10;
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -46,12 +48,12 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     return;
                 }
                 if (result === true) {
-                    // const userData = {
-                    //     email: email,
-                    //     username: username,
-                    //   };
-                    //   generateAndStoreToken(req, res, userData, next); 
-                    res.json({ message: "L'authentification a réussi !" });
+                    const userData = {
+                        email: email,
+                        username: username,
+                    };
+                    (0, authMiddleware_1.generateAndStoreToken)(req, res, userData, next);
+                    //   res.status(200).json({ message: "L'authentification a réussi !" });
                     return;
                 }
                 else {

@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateAndStoreToken = void 0;
+exports.verifyToken = exports.generateAndStoreToken = void 0;
 const jwt = require('jsonwebtoken');
 const jsonwebtoken_1 = require("jsonwebtoken");
+require('dotenv').config();
+const secret = process.env.JWT_SECRET || "";
 const generateAndStoreToken = (req, res, userData, next) => {
     const user = { username: userData.username, email: userData.email };
-    const secret = process.env.JWT_SECRET || "";
     const MAX_AGE = 60 * 60 * 24 * 30;
     //   const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' });
     const token = (0, jsonwebtoken_1.sign)({
@@ -19,9 +20,30 @@ const generateAndStoreToken = (req, res, userData, next) => {
         secure: process.env.NODE_ENV === 'production',
         maxAge: 3600000, // Durée de validité du token (1 heure)
     });
-    next(); //étape suivante de la chaîne middleware
+    console.log("token: " + token);
+    next();
 };
 exports.generateAndStoreToken = generateAndStoreToken;
+if (!secret) {
+    console.error('La variable d\'environnement JWT_SECRET n\'est pas définie.');
+    process.exit(1);
+}
+const verifyToken = (req, res, next) => {
+    console.log("req.cookies.jwtToken: " + req.cookies.jwtToken);
+    const token = req.cookies.jwtToken;
+    if (!token) {
+        return res.status(401).json({ message: 'Token missing' });
+    }
+    try {
+        const decoded = jwt.verify(token, secret);
+        req.decodedToken = decoded;
+        return;
+    }
+    catch (error) {
+        return res.status(401).json({ message: 'Token invalid' });
+    }
+};
+exports.verifyToken = verifyToken;
 // import jwt, {JwtPayload} from 'jsonwebtoken';
 // import { Request,Response } from 'express';
 // require('dotenv').config();

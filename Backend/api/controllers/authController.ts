@@ -1,3 +1,6 @@
+
+//authController
+
 import { Request, Response } from 'express';
 import createDatabaseConnection from '../../config/database';
 const db = createDatabaseConnection();
@@ -43,12 +46,12 @@ export const loginUser = async (req: Request, res: Response, next: (() => void))
   
           if (result === true) {
            
-            // const userData = {
-            //     email: email,
-            //     username: username,
-            //   };
-            //   generateAndStoreToken(req, res, userData, next); 
-              res.json({ message: "L'authentification a réussi !" });
+            const userData = {
+                email: email,
+                username: username,
+              };
+              generateAndStoreToken(req, res, userData, next); 
+            //   res.status(200).json({ message: "L'authentification a réussi !" });
               return
           } else {
             return res.status(401).json({ message: "L'authentification a échoué. Vérifiez vos informations d'identification." });
