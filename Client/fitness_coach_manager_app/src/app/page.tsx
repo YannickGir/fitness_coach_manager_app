@@ -25,7 +25,7 @@ function HomePage() {
         }
       }, [router]);
 
-    
+     
 
     const handleSignIn = async (username: string, password_hash: string, email:string) => {
         setLoading(true);
@@ -44,13 +44,15 @@ function HomePage() {
             // alert(JSON.stringify("vous êtes connecté !"))
             //to manage redirection to Dashboard if session ok :
             const { token } = response.data;
-            localStorage.setItem('userSession', token);
+            console.log(token)
+            localStorage.setItem('userSession', username);
 
             //to manage storage of JWT token:
-            Cookies.set('usernameCookie', username);
-            const storedUsername = Cookies.get('usernameCookie');
+            // Cookies.set('usernameCookie', username);
+            const storedUsername = Cookies.get('jwtToken');
+
             alert('Nom de l\'utilisateur'+ username +'stocké dans le cookie : ' + storedUsername);
-            
+
             router.push('/Dashboard'); 
           } else {
             console.log('Erreur lors de la connexion dans try');

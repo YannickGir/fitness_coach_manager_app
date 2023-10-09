@@ -37,10 +37,10 @@ export const Dashboard = () => {
             localStorage.removeItem('userSession');
             router.push('/'); 
           } else {
-            console.error('Erreur lors de la déconnexion :', response.statusText);
+            console.error('Erreur lors de la déconnexion try dashboard :', response.statusText);
           }
         } catch (error) {
-          console.error('Erreur lors de la déconnexion :', error);
+          console.error('Erreur lors de la déconnexion catch dashboard :', error);
         }
       };
 
