@@ -17,7 +17,7 @@ router.get("/user_table", async (req: Request, res: Response)=> {
 router.post('/authenticate', async (req, res, next) => {
     try {
       const result = await loginUser(req, res, next);
-      return res.status(200).json("connexion réussie !")
+    //   return res.status(200).json("connexion réussie !")
     } catch (error) {
       console.error(error);
       res.json({ message: 'Erreur lors de l\'authentification' });

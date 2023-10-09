@@ -23,7 +23,7 @@ router.get("/user_table", (req, res) => __awaiter(void 0, void 0, void 0, functi
 router.post('/authenticate', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield (0, authController_1.loginUser)(req, res, next);
-        return res.status(200).json("connexion réussie !");
+        //   return res.status(200).json("connexion réussie !")
     }
     catch (error) {
         console.error(error);

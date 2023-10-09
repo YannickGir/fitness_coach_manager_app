@@ -6,13 +6,13 @@ import { sign } from 'jsonwebtoken';
 require('dotenv').config();
 const secret = process.env.JWT_SECRET || "";
 export const generateAndStoreToken = (req:Request, res:Response, userData: { email: any; username: any; }, next: (() => void)) => {
-
+    console.log("UserData:", userData);
   const user = { username: userData.username, email: userData.email };
   
   const MAX_AGE : number = 60* 60* 24* 30;
 //   const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' });
   
-  const token = sign(
+  const token = jwt.sign(
     {
         username:userData.username,
         email:userData.email
@@ -22,12 +22,16 @@ export const generateAndStoreToken = (req:Request, res:Response, userData: { ema
            expiresIn : MAX_AGE
         }
     );
+    console.log("Token généré:", token);
+
   res.cookie('jwtToken', token, {
     httpOnly: true, // cookie accessible uniquement côté serveur
     secure: process.env.NODE_ENV === 'production', // HTTPS en production
     maxAge: 3600000, // Durée de validité du token (1 heure)
+    path: '/',
   });
-  console.log("token: " + token)
+  console.log("Cookie jwtToken défini:", req.cookies.jwtToken);
+
   next();
 }
 

@@ -52,8 +52,9 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                         email: email,
                         username: username,
                     };
-                    (0, authMiddleware_1.generateAndStoreToken)(req, res, userData, next);
-                    //   res.status(200).json({ message: "L'authentification a réussi !" });
+                    (0, authMiddleware_1.generateAndStoreToken)(req, res, userData, () => {
+                        res.status(200).json("connexion réussie !");
+                    });
                     return;
                 }
                 else {

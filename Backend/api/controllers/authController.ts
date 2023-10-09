@@ -50,9 +50,10 @@ export const loginUser = async (req: Request, res: Response, next: (() => void))
                 email: email,
                 username: username,
               };
-              generateAndStoreToken(req, res, userData, next); 
-            //   res.status(200).json({ message: "L'authentification a réussi !" });
-              return
+              generateAndStoreToken(req, res, userData, () => {
+                res.status(200).json("connexion réussie !");
+              });
+              return; 
           } else {
             return res.status(401).json({ message: "L'authentification a échoué. Vérifiez vos informations d'identification." });
           }

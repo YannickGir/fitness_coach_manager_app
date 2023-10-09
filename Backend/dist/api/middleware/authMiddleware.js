@@ -2,25 +2,27 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyToken = exports.generateAndStoreToken = void 0;
 const jwt = require('jsonwebtoken');
-const jsonwebtoken_1 = require("jsonwebtoken");
 require('dotenv').config();
 const secret = process.env.JWT_SECRET || "";
 const generateAndStoreToken = (req, res, userData, next) => {
+    console.log("UserData:", userData);
     const user = { username: userData.username, email: userData.email };
     const MAX_AGE = 60 * 60 * 24 * 30;
     //   const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const token = (0, jsonwebtoken_1.sign)({
+    const token = jwt.sign({
         username: userData.username,
         email: userData.email
     }, secret, {
         expiresIn: MAX_AGE
     });
+    console.log("Token généré:", token);
     res.cookie('jwtToken', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 3600000, // Durée de validité du token (1 heure)
+        maxAge: 3600000,
+        path: '/',
     });
-    console.log("token: " + token);
+    console.log("Cookie jwtToken défini:", req.cookies.jwtToken);
     next();
 };
 exports.generateAndStoreToken = generateAndStoreToken;
