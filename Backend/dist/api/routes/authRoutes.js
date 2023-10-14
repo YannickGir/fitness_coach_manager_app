@@ -20,6 +20,9 @@ const router = express_1.default.Router();
 router.get("/user_table", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield (0, authController_1.getUsers)(req, res);
 }));
+router.get("/userAuthenticated", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield (0, authController_1.userAuthenticated)(req, res);
+}));
 router.post('/authenticate', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield (0, authController_1.loginUser)(req, res, next);

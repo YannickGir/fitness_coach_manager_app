@@ -15,7 +15,13 @@ const bodyParser = require('body-parser');
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const db = (0, database_1.default)();
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // Si vous utilisez des cookies ou des informations d'authentification.
+};
 app.use(cookieParser());
+app.use((0, cors_1.default)(corsOptions));
 app.use((0, express_session_1.default)({
     secret: 'votre_secret',
     resave: false,
@@ -35,7 +41,10 @@ app.get('/CustomPopup', (req, res) => {
 });
 app.use('/api', authRoute);
 app.use(express_1.default.json()); //to send datas from client in json form
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    credentials: true,
+    origin: ['http://localhost:3000', 'http://localhost:8800']
+}));
 app.get("/", (req, res) => {
     res.json("hello this is the backend !!");
 });

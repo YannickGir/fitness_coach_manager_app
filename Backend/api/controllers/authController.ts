@@ -50,9 +50,18 @@ export const loginUser = async (req: Request, res: Response, next: (() => void))
                 email: email,
                 username: username,
               };
+
               generateAndStoreToken(req, res, userData, () => {
-                res.status(200).json("connexion réussie !");
-              });
+                });
+                const token = req.myToken;
+                console.log("token in authController :" + token)
+                // res.cookie('jwtToken', token, {
+                //     httpOnly: true, 
+                //     maxAge: 3600000, 
+                //     path: '/',
+                //   });
+                //   console.log("Cookie jwtToken défini:", req.cookies.jwtToken);
+                res.status(200).json({ message: "Login successful", token });
               return; 
           } else {
             return res.status(401).json({ message: "L'authentification a échoué. Vérifiez vos informations d'identification." });
@@ -63,7 +72,12 @@ export const loginUser = async (req: Request, res: Response, next: (() => void))
       return }
     });
   };
+  export const userAuthenticated = async(req:Request, res:Response)=>{
+    const cookie = req.cookies["jwtToken"]
 
+    res.send(cookie)
+    
+  }
 export const SignUpUser = async(req:Request, res:Response)=>{
     bcrypt.genSalt(saltRounds, function(err: Error | undefined, salt: string) {
         if (err) 

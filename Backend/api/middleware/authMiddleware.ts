@@ -1,14 +1,15 @@
+//authMiddleware
+
 
 const jwt = require('jsonwebtoken');
 import { Request, Response } from 'express';
-import { sign } from 'jsonwebtoken';
 
 require('dotenv').config();
 const secret = process.env.JWT_SECRET || "";
+
 export const generateAndStoreToken = (req:Request, res:Response, userData: { email: any; username: any; }, next: (() => void)) => {
-    console.log("UserData:", userData);
+  console.log("UserData:", userData);
   const user = { username: userData.username, email: userData.email };
-  
   const MAX_AGE : number = 60* 60* 24* 30;
 //   const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' });
   
@@ -23,15 +24,18 @@ export const generateAndStoreToken = (req:Request, res:Response, userData: { ema
         }
     );
     console.log("Token généré:", token);
+    req.myToken = token;
+ 
 
-  res.cookie('jwtToken', token, {
-    httpOnly: true, // cookie accessible uniquement côté serveur
-    secure: process.env.NODE_ENV === 'production', // HTTPS en production
-    maxAge: 3600000, // Durée de validité du token (1 heure)
-    path: '/',
-  });
-  console.log("Cookie jwtToken défini:", req.cookies.jwtToken);
-
+// res.cookie('userId', 'userData.userId', {
+//     httpOnly: true,
+//     secure: process.env.NODE_ENV === 'production',
+//     maxAge: 3600000,
+//     path: '/',
+//   });
+  
+  
+//   res.status(200).json({ message: "connexion réussie !", token: token });
   next();
 }
 

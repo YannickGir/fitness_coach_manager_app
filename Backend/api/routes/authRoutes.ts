@@ -2,7 +2,7 @@
 //authRoutes
 
 import express from 'express';
-import { loginUser, getUsers, SignUpUser } from '../controllers/authController';
+import { loginUser, getUsers, SignUpUser, userAuthenticated } from '../controllers/authController';
 import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import { verifyToken } from '../middleware/authMiddleware';
@@ -12,6 +12,10 @@ const router = express.Router();
 
 router.get("/user_table", async (req: Request, res: Response)=> {
     const result = await getUsers(req, res);
+})
+
+router.get("/userAuthenticated", async (req: Request, res: Response)=> {
+    const result = await userAuthenticated(req, res);
 })
 
 router.post('/authenticate', async (req, res, next) => {

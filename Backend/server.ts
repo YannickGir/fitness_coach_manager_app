@@ -15,7 +15,13 @@ dotenv.config();
 
 const app = express()
 const db = createDatabaseConnection();
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // Si vous utilisez des cookies ou des informations d'authentification.
+  };
 app.use(cookieParser());
+app.use(cors(corsOptions));
 app.use(session({
     secret: 'votre_secret',
     resave: false,
@@ -42,7 +48,10 @@ app.get('/CustomPopup', (req, res) => {
 app.use('/api', authRoute)
 
 app.use(express.json());  //to send datas from client in json form
-app.use(cors());
+app.use(cors({
+    credentials : true,
+    origin: ['http://localhost:3000', 'http://localhost:8800']
+}));
 app.get("/", (req, res) => {
     res.json("hello this is the backend !!")
 })

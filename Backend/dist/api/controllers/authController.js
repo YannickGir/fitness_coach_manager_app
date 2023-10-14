@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SignUpUser = exports.loginUser = exports.getUsers = void 0;
+exports.SignUpUser = exports.userAuthenticated = exports.loginUser = exports.getUsers = void 0;
 const database_1 = __importDefault(require("../../config/database"));
 const db = (0, database_1.default)();
 const authMiddleware_1 = require("../middleware/authMiddleware");
@@ -53,8 +53,16 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                         username: username,
                     };
                     (0, authMiddleware_1.generateAndStoreToken)(req, res, userData, () => {
-                        res.status(200).json("connexion réussie !");
                     });
+                    const token = req.myToken;
+                    console.log("token in authController :" + token);
+                    // res.cookie('jwtToken', token, {
+                    //     httpOnly: true, 
+                    //     maxAge: 3600000, 
+                    //     path: '/',
+                    //   });
+                    //   console.log("Cookie jwtToken défini:", req.cookies.jwtToken);
+                    res.status(200).json({ message: "Login successful", token });
                     return;
                 }
                 else {
@@ -69,6 +77,11 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     });
 });
 exports.loginUser = loginUser;
+const userAuthenticated = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const cookie = req.cookies["jwtToken"];
+    res.send(cookie);
+});
+exports.userAuthenticated = userAuthenticated;
 const SignUpUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     bcrypt_1.default.genSalt(saltRounds, function (err, salt) {
         if (err) {

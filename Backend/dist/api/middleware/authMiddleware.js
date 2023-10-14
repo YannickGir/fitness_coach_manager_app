@@ -1,4 +1,5 @@
 "use strict";
+//authMiddleware
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyToken = exports.generateAndStoreToken = void 0;
 const jwt = require('jsonwebtoken');
@@ -16,13 +17,14 @@ const generateAndStoreToken = (req, res, userData, next) => {
         expiresIn: MAX_AGE
     });
     console.log("Token généré:", token);
-    res.cookie('jwtToken', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 3600000,
-        path: '/',
-    });
-    console.log("Cookie jwtToken défini:", req.cookies.jwtToken);
+    req.myToken = token;
+    // res.cookie('userId', 'userData.userId', {
+    //     httpOnly: true,
+    //     secure: process.env.NODE_ENV === 'production',
+    //     maxAge: 3600000,
+    //     path: '/',
+    //   });
+    //   res.status(200).json({ message: "connexion réussie !", token: token });
     next();
 };
 exports.generateAndStoreToken = generateAndStoreToken;
