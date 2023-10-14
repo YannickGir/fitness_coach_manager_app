@@ -32,28 +32,45 @@ function HomePage() {
         console.log('Tentative de connexion avec username :', username, 'et password :', password_hash);
       
         try {
-          const response = await axios.post("http://localhost:8800/api/authenticate", {
+          const response = await axios.post("http://localhost:8800/api/authenticate",  {
             username,
             password_hash,
             email,
-          });
-          console.log('Statut de la réponse :', response.status);
+            withCredentials: true
+          } );
+          console.log('Statut de la réponse :', response.headers);
     
           if (response.status === 200) {
             // console.log('username dans try' + username)
             // alert(JSON.stringify("vous êtes connecté !"))
             //to manage redirection to Dashboard if session ok :
-            const { token } = response.data;
-            console.log(token)
-            localStorage.setItem('userSession', username);
-
-            //to manage storage of JWT token:
-            // Cookies.set('usernameCookie', username);
-            const storedUsername = Cookies.get('jwtToken');
-
-            alert('Nom de l\'utilisateur'+ username +'stocké dans le cookie : ' + storedUsername);
-
-            router.push('/Dashboard'); 
+            
+            Cookies.set("jwtToken", response.data.token, { expires: 7 });
+            const storedToken = Cookies.get('jwtToken');
+            console.log("soterdToken :"  + storedToken)
+                if (storedToken) {
+                // Le token a été trouvé dans le cookie, vous pouvez le stocker localement ou l'utiliser.
+                console.log('Token récupéré depuis le cookie :', storedToken);
+                localStorage.setItem('userSession', username);
+                // Faites ce que vous avez besoin de faire avec le token.
+                alert(JSON.stringify(" vous êtes connecté ! " + username))
+                 
+                    router.push('/Dashboard'); 
+                
+                
+        
+                    // Le token n'a pas été trouvé dans le cookie.
+                    
+                    // Gérez le cas où le token n'est pas disponible.
+                    
+                    // const { token } = response.data;
+                    // console.log(token)
+                    // if (token) { 
+                    // const storedUsername = Cookies.set('jwtToken', token);
+          
+                } else {
+                console.log('Token non trouvé dans le cookie, page connexion.');
+                }
           } else {
             console.log('Erreur lors de la connexion dans try');
           }
