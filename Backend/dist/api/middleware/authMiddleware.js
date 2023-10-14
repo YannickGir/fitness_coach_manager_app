@@ -1,11 +1,11 @@
 "use strict";
 //authMiddleware
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyToken = exports.generateAndStoreToken = void 0;
+exports.verifyToken = exports.generateToken = void 0;
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const secret = process.env.JWT_SECRET || "";
-const generateAndStoreToken = (req, res, userData, next) => {
+const generateToken = (req, res, userData, next) => {
     console.log("UserData:", userData);
     const user = { username: userData.username, email: userData.email };
     const MAX_AGE = 60 * 60 * 24 * 30;
@@ -27,7 +27,7 @@ const generateAndStoreToken = (req, res, userData, next) => {
     //   res.status(200).json({ message: "connexion réussie !", token: token });
     next();
 };
-exports.generateAndStoreToken = generateAndStoreToken;
+exports.generateToken = generateToken;
 if (!secret) {
     console.error('La variable d\'environnement JWT_SECRET n\'est pas définie.');
     process.exit(1);

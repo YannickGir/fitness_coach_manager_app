@@ -2,7 +2,7 @@
 //authRoutes
 
 import express from 'express';
-import { loginUser, getUsers, SignUpUser, userAuthenticated } from '../controllers/authController';
+import { loginUser, getUsers, SignUpUser, userAuthenticated,logoutMiddleware } from '../controllers/authController';
 import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import { verifyToken } from '../middleware/authMiddleware';
@@ -38,7 +38,7 @@ router.post('/signUp', async (req, res)=>{
     }
   })
 
-router.post('/logout', verifyToken, (req, res) => {
+router.post('/logout', logoutMiddleware, (req, res) => {
     // Détruire la session
     req.session.destroy((err) => {
       if (err) {

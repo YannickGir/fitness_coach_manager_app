@@ -7,7 +7,7 @@ import { Request, Response } from 'express';
 require('dotenv').config();
 const secret = process.env.JWT_SECRET || "";
 
-export const generateAndStoreToken = (req:Request, res:Response, userData: { email: any; username: any; }, next: (() => void)) => {
+export const generateToken = (req:Request, res:Response, userData: { email: any; username: any; }, next: (() => void)) => {
   console.log("UserData:", userData);
   const user = { username: userData.username, email: userData.email };
   const MAX_AGE : number = 60* 60* 24* 30;
@@ -46,6 +46,7 @@ if (!secret) {
 }
 
 export const verifyToken = (req: Request, res: Response, next: () => void) => {
+    
     console.log("req.cookies.jwtToken: " + req.cookies.jwtToken)
     const token = req.cookies.jwtToken; 
     if (!token) {

@@ -15,7 +15,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const authController_1 = require("../controllers/authController");
-const authMiddleware_1 = require("../middleware/authMiddleware");
 const router = express_1.default.Router();
 router.get("/user_table", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield (0, authController_1.getUsers)(req, res);
@@ -42,7 +41,7 @@ router.post('/signUp', (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(500).json({ message: 'Erreur lors de l\'inscription' });
     }
 }));
-router.post('/logout', authMiddleware_1.verifyToken, (req, res) => {
+router.post('/logout', authController_1.logoutMiddleware, (req, res) => {
     // Détruire la session
     req.session.destroy((err) => {
         if (err) {

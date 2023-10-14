@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SignUpUser = exports.userAuthenticated = exports.loginUser = exports.getUsers = void 0;
+exports.logoutMiddleware = exports.SignUpUser = exports.userAuthenticated = exports.loginUser = exports.getUsers = void 0;
 const database_1 = __importDefault(require("../../config/database"));
 const db = (0, database_1.default)();
 const authMiddleware_1 = require("../middleware/authMiddleware");
@@ -52,7 +52,7 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                         email: email,
                         username: username,
                     };
-                    (0, authMiddleware_1.generateAndStoreToken)(req, res, userData, () => {
+                    (0, authMiddleware_1.generateToken)(req, res, userData, () => {
                     });
                     const token = req.myToken;
                     console.log("token in authController :" + token);
@@ -122,3 +122,8 @@ const SignUpUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     });
 });
 exports.SignUpUser = SignUpUser;
+const logoutMiddleware = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.clearCookie('jwtToken');
+    res.status(200).json({ message: 'Déconnexion réussie' });
+});
+exports.logoutMiddleware = logoutMiddleware;

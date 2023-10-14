@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 import createDatabaseConnection from '../../config/database';
 const db = createDatabaseConnection();
 import { ParsedQs } from 'qs';
-import { generateAndStoreToken} from "../middleware/authMiddleware";
+import { generateToken} from "../middleware/authMiddleware";
 
 
 import bcrypt from 'bcrypt';
@@ -51,7 +51,7 @@ export const loginUser = async (req: Request, res: Response, next: (() => void))
                 username: username,
               };
 
-              generateAndStoreToken(req, res, userData, () => {
+              generateToken(req, res, userData, () => {
                 });
                 const token = req.myToken;
                 console.log("token in authController :" + token)
@@ -126,3 +126,8 @@ export const SignUpUser = async(req:Request, res:Response)=>{
 
     
 };
+
+    export const logoutMiddleware = async(req: Request, res: Response)=> {
+        res.clearCookie('jwtToken');
+        res.status(200).json({ message: 'Déconnexion réussie' });
+    }
