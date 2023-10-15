@@ -6,16 +6,43 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import LoadinPage from '../LoadingPage/page';
 import './dashboard.css';
+import Cookies from 'js-cookie';
 
 export const Dashboard = () => {
     const router = useRouter();
     const [authenticated, setAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true)
 
+    //CREER UN CUSTOM HOOK AVEC CE QUI SUIT :
     useEffect(() => {
         const userSession = localStorage.getItem('userSession');
-        if (userSession) {
+
+
+        const verifyAccessToDashboard = async () => {
+      try {
+        const response = await fetch('http://localhost:8800/api/dashboard', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include', // option pour inclure les cookies
+        });
+
+        if (response.status === 200) {
           setAuthenticated(true);
+        } else {
+          router.push('/');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la vérification de l\'accès au tableau de bord :', error);
+        router.push('/');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+        if (userSession) {
+        verifyAccessToDashboard();
         } else {
           router.push('/'); 
         }
@@ -23,6 +50,7 @@ export const Dashboard = () => {
             setLoading(false); 
           }, 2000);
         }, [router]);
+
     const handleLogout = async () => {
         try {
           const response = await fetch('http://localhost:8800/api/logout', {
