@@ -10,6 +10,7 @@ const [userDatas, setUserDatas] = useState<Profile>({
     password_hash: "",
     id: 0,
     created_at: new Date(),
+    role:"client",
 })
 
 const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -17,9 +18,14 @@ const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserDatas((prev) => ({...prev, [name]: value}))
 
 }
+const handleChangeRole = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setUserDatas((prev) => ({...prev, [name]: value}))
+
+}
 const handleClick = async (e: FormEvent) => {
     e.preventDefault();
-    onSignUp(userDatas.username, userDatas.password_hash, userDatas.email);
+    onSignUp(userDatas.username, userDatas.password_hash, userDatas.email, userDatas.role);
   }
 
 
@@ -41,6 +47,16 @@ const handleClick = async (e: FormEvent) => {
       <h2> password </h2> 
     <input onChange={handleChange} className='inputform' type="text" name="password_hash" value={userDatas.password_hash} />
   </label>
+
+  <label>
+
+  <h2>Role</h2>
+  <select onChange={(e)=>handleChangeRole(e)} className='inputform' name="role" value={userDatas.role}>
+    <option value="client">Client</option>
+    <option value="coach">Coach</option>
+  </select>
+</label>
+
 
 </form>
 <button onClick={handleClick} >Inscription</button> 

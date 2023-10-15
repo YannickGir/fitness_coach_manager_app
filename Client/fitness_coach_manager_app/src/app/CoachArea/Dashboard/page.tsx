@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import LoadinPage from '../LoadingPage/page';
+import LoadinPage from '../../LoadingPage/page';
 import './dashboard.css';
 import Cookies from 'js-cookie';
 import axios from 'axios'
@@ -13,14 +13,7 @@ export const Dashboard = () => {
     const [authenticated, setAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true)
 
-    //CREER UN CUSTOM HOOK AVEC CE QUI SUIT :
     useEffect(() => {
-        
-        // const storedToken = Cookies.get('jwtToken');
-        // if (!storedToken) {
-        //     alert('Vous n\'êtes pas authentifié, vous allez être redirigé vers la page de connexion !');
-        //   router.push('/');
-        // }
         const userSession = localStorage.getItem('userSession');
         const verifyAccessToDashboard = async () => {
       try {
@@ -44,7 +37,6 @@ export const Dashboard = () => {
         setLoading(false);
       }
     };
-
         if (userSession) {
         verifyAccessToDashboard();
         } else {
@@ -85,7 +77,7 @@ export const Dashboard = () => {
   return (
     <div className="App">
         <div className='wrapper'>
-            <h1 className="custom-h1">Dashboard </h1><br/>
+            <h1 className="custom-h1">Dashboard Coach </h1><br/>
             <button onClick={handleLogout}>Déconnexion</button>
             <Link href="./SignUpPage">     Retour à l&aposinscription
     </Link>

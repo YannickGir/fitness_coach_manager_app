@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 
+//PENSER A CREER UNE CONFIRMATION PAR EMAIL
 
 export const SignUpPage : React.FC = () => {
     const router = useRouter(); 
@@ -17,18 +18,19 @@ export const SignUpPage : React.FC = () => {
         const userSession = localStorage.getItem('userSession');
     if (userSession) {
           setAuthenticated(true);
-          router.push('/Dashboard');
+          router.push('CoachArea/Dashboard');
             }
         }
       }, [router]);
 
-    const handleSignUp = async (username: string, password_hash: string, email:string) => {
+    const handleSignUp = async (username: string, password_hash: string, email:string, role:string) => {
       console.log('Tentative de connexion avec username :', username, 'et password :', password_hash);
       try {
         const response = await axios.post("http://localhost:8800/api/signUp", {
           username,
           password_hash,
           email,
+          role
         });
   
         if (response.status === 200) {

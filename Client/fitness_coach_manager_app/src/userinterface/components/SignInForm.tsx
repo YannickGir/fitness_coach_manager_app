@@ -11,6 +11,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSignIn }) => {
         password_hash: "",
         id: 0,
         created_at: new Date(),
+        role:""
     })
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

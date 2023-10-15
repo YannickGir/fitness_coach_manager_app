@@ -20,12 +20,9 @@ function HomePage() {
     useEffect(() => {
         const userSession = localStorage.getItem('userSession');
         if (userSession) {
-          setAuthenticated(true);
-          router.push('/Dashboard'); 
+          setAuthenticated(true); 
         }
       }, [router]);
-
-     
 
     const handleSignIn = async (username: string, password_hash: string, email:string) => {
         setLoading(true);
@@ -55,7 +52,7 @@ function HomePage() {
                 // Faites ce que vous avez besoin de faire avec le token.
                 alert(JSON.stringify(" vous êtes connecté ! " + username))
                  
-                    router.push('/Dashboard'); 
+                    router.push('CoachArea/Dashboard'); 
                 
                 
         

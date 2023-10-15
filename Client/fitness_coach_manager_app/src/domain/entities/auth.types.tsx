@@ -1,4 +1,5 @@
 export type Profile = {
+    role: string;
     username:string;
     id: number;
     email: string;
@@ -11,7 +12,7 @@ export type SignInFormProps = {
     };
 
 export type SignUpFormProps = {
-    onSignUp: (username: string, password: string, email: string) => void;
+    onSignUp: (username: string, password: string, email: string, role: string) => void;
     };
 
 export type CustomPopupProps = {
