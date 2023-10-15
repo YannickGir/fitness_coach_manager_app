@@ -28,7 +28,6 @@ const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.getUsers = getUsers;
-//J'AI INITIALISE JWT UNIQUEMENT DANS LOGINUSER POUR LE MOMENT, LE FAIRE ENSUITE DANS SINGUP APRES VERIFICATION QUE CA MARCHE
 const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password_hash, email } = req.body;
     const q = "SELECT * FROM user_table WHERE (username = ? OR email = ?)";
@@ -91,6 +90,7 @@ const SignUpUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 req.body.email,
                 hashedPassword,
                 req.body.created_at,
+                req.body.role,
             ];
             const sql = "SELECT COUNT(*) AS count FROM user_table WHERE email = ?";
             db.query(sql, [values[1]], (error, results) => {
@@ -100,7 +100,7 @@ const SignUpUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                     console.log("email Exists");
                 }
                 else {
-                    const q = "INSERT INTO user_table (`username`,`email`,`password_hash`,`created_at`) VALUES (?)";
+                    const q = "INSERT INTO user_table (`username`,`email`,`password_hash`,`created_at`,`role`) VALUES (?)";
                     db.query(q, [values], (err, data) => {
                         if (err) {
                             console.error(err);

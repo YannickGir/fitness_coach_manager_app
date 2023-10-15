@@ -19,9 +19,6 @@ export const getUsers = async(req: Request, res: Response)=> {
     })
 }
 
-
-//J'AI INITIALISE JWT UNIQUEMENT DANS LOGINUSER POUR LE MOMENT, LE FAIRE ENSUITE DANS SINGUP APRES VERIFICATION QUE CA MARCHE
-
 export const loginUser = async (req: Request, res: Response, next: (() => void)) => {
     const { username, password_hash, email } = req.body;
     const q = "SELECT * FROM user_table WHERE (username = ? OR email = ?)";
@@ -91,6 +88,7 @@ export const SignUpUser = async(req:Request, res:Response)=>{
                 req.body.email,
                 hashedPassword,
                 req.body.created_at,
+                req.body.role,
             ]
             const sql = "SELECT COUNT(*) AS count FROM user_table WHERE email = ?";
             db.query(sql, [values[1]], (error, results:any)=> {
@@ -102,7 +100,7 @@ export const SignUpUser = async(req:Request, res:Response)=>{
                 }
                 else 
                 {
-                    const q = "INSERT INTO user_table (`username`,`email`,`password_hash`,`created_at`) VALUES (?)"
+                    const q = "INSERT INTO user_table (`username`,`email`,`password_hash`,`created_at`,`role`) VALUES (?)"
                     db.query(q, [values], (err, data) => {
                         if (err) 
                         {
