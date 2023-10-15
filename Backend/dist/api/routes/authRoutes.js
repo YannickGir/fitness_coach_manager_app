@@ -53,4 +53,5 @@ router.post('/logout', authController_1.logoutMiddleware, (req, res) => {
         res.status(200).json({ message: 'Déconnexion réussie' });
     });
 });
+router.get('/dashboard', authController_1.accesstoDashboard);
 module.exports = router;

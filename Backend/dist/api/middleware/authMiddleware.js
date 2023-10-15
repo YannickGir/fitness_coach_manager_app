@@ -6,8 +6,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const secret = process.env.JWT_SECRET || "";
 const generateToken = (req, res, userData, next) => {
-    console.log("UserData:", userData);
-    const user = { username: userData.username, email: userData.email };
+    // console.log("UserData:", userData);
+    //const user = { username: userData.username, email: userData.email };
     const MAX_AGE = 60 * 60 * 24 * 30;
     //   const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' });
     const token = jwt.sign({
@@ -16,7 +16,7 @@ const generateToken = (req, res, userData, next) => {
     }, secret, {
         expiresIn: MAX_AGE
     });
-    console.log("Token généré:", token);
+    //console.log("Token généré:", token);
     req.myToken = token;
     // res.cookie('userId', 'userData.userId', {
     //     httpOnly: true,
@@ -41,7 +41,7 @@ const verifyToken = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, secret);
         req.decodedToken = decoded;
-        return;
+        next();
     }
     catch (error) {
         return res.status(401).json({ message: 'Token invalid' });

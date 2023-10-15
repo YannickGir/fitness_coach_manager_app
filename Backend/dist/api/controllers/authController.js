@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logoutMiddleware = exports.SignUpUser = exports.userAuthenticated = exports.loginUser = exports.getUsers = void 0;
+exports.accesstoDashboard = exports.logoutMiddleware = exports.SignUpUser = exports.userAuthenticated = exports.loginUser = exports.getUsers = void 0;
 const database_1 = __importDefault(require("../../config/database"));
 const db = (0, database_1.default)();
 const authMiddleware_1 = require("../middleware/authMiddleware");
@@ -28,12 +28,11 @@ const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.getUsers = getUsers;
-//J'AI INITIALISE JWT UNIQUEMENT DANS LIGINUSER POUR LE MOMENT, LE FAIRE ENSUITE DANS SINGUP APRES VERIFICATION QUE CA MARCHE
-//ET AJOUTER UNE VERIFICATION DE TOKEN AUSSI (CREER MIDDLEWARE ET L'AJOUTER ICI A LOGINUSER)
+//J'AI INITIALISE JWT UNIQUEMENT DANS LOGINUSER POUR LE MOMENT, LE FAIRE ENSUITE DANS SINGUP APRES VERIFICATION QUE CA MARCHE
 const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password_hash, email } = req.body;
     const q = "SELECT * FROM user_table WHERE (username = ? OR email = ?)";
-    db.query(q, [username, email], (err, results, fields) => {
+    db.query(q, [username, email], (err, results) => {
         if (err) {
             console.error(err);
             res.status(500).json({ message: "Erreur de serveur lors de l'authentification." });
@@ -55,13 +54,6 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     (0, authMiddleware_1.generateToken)(req, res, userData, () => {
                     });
                     const token = req.myToken;
-                    console.log("token in authController :" + token);
-                    // res.cookie('jwtToken', token, {
-                    //     httpOnly: true, 
-                    //     maxAge: 3600000, 
-                    //     path: '/',
-                    //   });
-                    //   console.log("Cookie jwtToken défini:", req.cookies.jwtToken);
                     res.status(200).json({ message: "Login successful", token });
                     return;
                 }
@@ -123,7 +115,14 @@ const SignUpUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.SignUpUser = SignUpUser;
 const logoutMiddleware = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = req.myToken;
     res.clearCookie('jwtToken');
     res.status(200).json({ message: 'Déconnexion réussie' });
 });
 exports.logoutMiddleware = logoutMiddleware;
+const accesstoDashboard = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = req.myToken;
+    (0, authMiddleware_1.verifyToken)(req, res, () => { });
+    res.status(200).json({ message: "Accès autorisé" });
+});
+exports.accesstoDashboard = accesstoDashboard;

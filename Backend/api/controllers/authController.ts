@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 import createDatabaseConnection from '../../config/database';
 const db = createDatabaseConnection();
 import { ParsedQs } from 'qs';
-import { generateToken} from "../middleware/authMiddleware";
+import { generateToken, verifyToken} from "../middleware/authMiddleware";
 
 
 import bcrypt from 'bcrypt';
@@ -20,14 +20,12 @@ export const getUsers = async(req: Request, res: Response)=> {
 }
 
 
-//J'AI INITIALISE JWT UNIQUEMENT DANS LIGINUSER POUR LE MOMENT, LE FAIRE ENSUITE DANS SINGUP APRES VERIFICATION QUE CA MARCHE
-//ET AJOUTER UNE VERIFICATION DE TOKEN AUSSI (CREER MIDDLEWARE ET L'AJOUTER ICI A LOGINUSER)
-
+//J'AI INITIALISE JWT UNIQUEMENT DANS LOGINUSER POUR LE MOMENT, LE FAIRE ENSUITE DANS SINGUP APRES VERIFICATION QUE CA MARCHE
 
 export const loginUser = async (req: Request, res: Response, next: (() => void)) => {
     const { username, password_hash, email } = req.body;
     const q = "SELECT * FROM user_table WHERE (username = ? OR email = ?)";
-    db.query(q, [username, email], (err, results, fields) => {
+    db.query(q, [username, email], (err, results) => {
       if (err) {
         console.error(err);
         res.status(500).json({ message: "Erreur de serveur lors de l'authentification." });
@@ -54,13 +52,6 @@ export const loginUser = async (req: Request, res: Response, next: (() => void))
               generateToken(req, res, userData, () => {
                 });
                 const token = req.myToken;
-                console.log("token in authController :" + token)
-                // res.cookie('jwtToken', token, {
-                //     httpOnly: true, 
-                //     maxAge: 3600000, 
-                //     path: '/',
-                //   });
-                //   console.log("Cookie jwtToken défini:", req.cookies.jwtToken);
                 res.status(200).json({ message: "Login successful", token });
               return; 
           } else {
@@ -72,12 +63,13 @@ export const loginUser = async (req: Request, res: Response, next: (() => void))
       return }
     });
   };
+
+
   export const userAuthenticated = async(req:Request, res:Response)=>{
     const cookie = req.cookies["jwtToken"]
-
     res.send(cookie)
-    
   }
+
 export const SignUpUser = async(req:Request, res:Response)=>{
     bcrypt.genSalt(saltRounds, function(err: Error | undefined, salt: string) {
         if (err) 
@@ -128,6 +120,13 @@ export const SignUpUser = async(req:Request, res:Response)=>{
 };
 
     export const logoutMiddleware = async(req: Request, res: Response)=> {
-        res.clearCookie('jwtToken');
+        const token = req.myToken;
+         res.clearCookie('jwtToken');
         res.status(200).json({ message: 'Déconnexion réussie' });
     }
+
+    export const accesstoDashboard = async(req:Request, res:Response)=>{
+        const token = req.myToken;
+        verifyToken(req, res, ()=>{});
+        res.status(200).json({ message: "Accès autorisé" });
+      }
