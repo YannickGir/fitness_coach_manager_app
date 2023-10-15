@@ -33,14 +33,14 @@ export const SignUpPage : React.FC = () => {
   
         if (response.status === 200) {
             //to manage redirection to Dashboard if session ok :
-            const { token } = response.data;
-            console.log(token)
-            localStorage.setItem('userSession', token);
+            // const { token } = response.data;
+            // console.log(token)
+            // localStorage.setItem('userSession', token);
             //to manage storage of JWT token:
-          Cookies.set('usernameCookie', username);
-            const storedUsername = Cookies.get('usernameCookie');
-            alert('Nom de l\'utilisateur'+ username +'stocké dans le cookie : ' + storedUsername);
-          router.push('Dashboard');
+        //   Cookies.set('usernameCookie', username);
+        //     const storedUsername = Cookies.get('usernameCookie');
+            alert('compte créé !');
+          router.push('./');
         } else {
           // Gérer les erreurs d'inscription ici.
           console.error('Erreur d\'inscription :', response.data);

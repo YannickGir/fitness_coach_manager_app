@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import LoadinPage from '../LoadingPage/page';
 import './dashboard.css';
 import Cookies from 'js-cookie';
-
+import axios from 'axios'
 export const Dashboard = () => {
     const router = useRouter();
     const [authenticated, setAuthenticated] = useState(false);
@@ -15,17 +15,21 @@ export const Dashboard = () => {
 
     //CREER UN CUSTOM HOOK AVEC CE QUI SUIT :
     useEffect(() => {
+        
+        // const storedToken = Cookies.get('jwtToken');
+        // if (!storedToken) {
+        //     alert('Vous n\'êtes pas authentifié, vous allez être redirigé vers la page de connexion !');
+        //   router.push('/');
+        // }
         const userSession = localStorage.getItem('userSession');
-
-
         const verifyAccessToDashboard = async () => {
       try {
-        const response = await fetch('http://localhost:8800/api/dashboard', {
+        const response = await axios.get('http://localhost:8800/api/dashboard', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          credentials: 'include', // option pour inclure les cookies
+          withCredentials:true,
         });
 
         if (response.status === 200) {

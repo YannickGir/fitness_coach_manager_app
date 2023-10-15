@@ -21,7 +21,7 @@ function HomePage() {
         const userSession = localStorage.getItem('userSession');
         if (userSession) {
           setAuthenticated(true);
-          router.push('Dashboard'); 
+          router.push('/Dashboard'); 
         }
       }, [router]);
 
@@ -69,10 +69,10 @@ function HomePage() {
                     // const storedUsername = Cookies.set('jwtToken', token);
           
                 } else {
-                console.log('Token non trouvé dans le cookie, page connexion.');
+                console.error('Token non trouvé dans le cookie, page connexion.');
                 }
           } else {
-            console.log('Erreur lors de la connexion dans try');
+            console.error('Erreur lors de la connexion dans try');
           }
         } catch (err) {
         //   console.log('Erreur lors de la connexion dans catch', err);
