@@ -29,7 +29,7 @@ const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getUsers = getUsers;
 const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { username, password_hash, email } = req.body;
+    const { username, password_hash, email, role } = req.body;
     const q = "SELECT * FROM user_table WHERE (username = ? OR email = ?)";
     db.query(q, [username, email], (err, results) => {
         if (err) {
@@ -49,7 +49,9 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     const userData = {
                         email: email,
                         username: username,
+                        role: user.role
                     };
+                    console.log("userData.role:" + userData.role);
                     (0, authMiddleware_1.generateToken)(req, res, userData, () => {
                     });
                     const token = req.myToken;
@@ -122,7 +124,17 @@ const logoutMiddleware = (req, res) => __awaiter(void 0, void 0, void 0, functio
 exports.logoutMiddleware = logoutMiddleware;
 const accesstoDashboard = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.myToken;
-    (0, authMiddleware_1.verifyToken)(req, res, () => { });
-    res.status(200).json({ message: "Accès autorisé" });
+    (0, authMiddleware_1.verifyToken)(req, res, (user) => {
+        console.log(user.role);
+        // Assurez-vous que l'utilisateur a le rôle "coach" pour accéder à la page Dashboard.
+        if (user && user.role === 'coach') {
+            // L'utilisateur a le rôle de coach, autorisez l'accès à la page Dashboard.
+            res.status(200).json({ message: "Accès autorisé à la page Dashboard" });
+        }
+        else {
+            // L'utilisateur n'a pas le rôle de coach, renvoyez une réponse non autorisée.
+            res.status(403).json({ message: "Accès refusé. Vous devez être un coach pour accéder à cette page." });
+        }
+    });
 });
 exports.accesstoDashboard = accesstoDashboard;

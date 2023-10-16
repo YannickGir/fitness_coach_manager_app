@@ -6,13 +6,14 @@ import { Request, Response } from 'express';
 require('dotenv').config();
 const secret = process.env.JWT_SECRET || "";
 
-export const generateToken = (req:Request, res:Response, userData: { email: any; username: any; }, next: (() => void)) => {
- // console.log("UserData:", userData);
+export const generateToken = (req:Request, res:Response, userData: { email: any; username: any; role:any }, next: (() => void)) => {
+  
   const MAX_AGE : number = 60* 60* 24* 30;
   const token = jwt.sign(
         {
             username:userData.username,
-            email:userData.email
+            email:userData.email,
+            role:userData.role
         },
         secret, 
         {
@@ -20,6 +21,7 @@ export const generateToken = (req:Request, res:Response, userData: { email: any;
         }
     );
     //console.log("Token généré:", token);
+   
     req.myToken = token;
     next();
     
@@ -29,8 +31,9 @@ export const generateToken = (req:Request, res:Response, userData: { email: any;
     }
 }
     
-export const verifyToken = (req: Request, res: Response, next: (() => void)) => {
+export const verifyToken = (req: Request, res: Response, next: ((user:any) => void)) => {
     console.log("req.cookies.jwtToken: " + req.cookies.jwtToken)
+    
     const token = req.cookies.jwtToken; 
     if (!token) {
         return res.status(401).json({ message: 'Token missing' });
@@ -38,7 +41,8 @@ export const verifyToken = (req: Request, res: Response, next: (() => void)) => 
     try {
         const decoded = jwt.verify(token, secret);
         (req as any).decodedToken = decoded;
-        next();
+        console.log("decoded: " + JSON.stringify(decoded, null, 2))
+        next(decoded);
     } catch (error) {
         return res.status(401).json({ message: 'Token invalid' });
     }

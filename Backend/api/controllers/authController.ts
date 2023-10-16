@@ -20,7 +20,7 @@ export const getUsers = async(req: Request, res: Response)=> {
 }
 
 export const loginUser = async (req: Request, res: Response, next: (() => void)) => {
-    const { username, password_hash, email } = req.body;
+    const { username, password_hash, email, role } = req.body;
     const q = "SELECT * FROM user_table WHERE (username = ? OR email = ?)";
     db.query(q, [username, email], (err, results) => {
       if (err) {
@@ -30,7 +30,9 @@ export const loginUser = async (req: Request, res: Response, next: (() => void))
       }
   
       if (Array.isArray(results) && results.length > 0) {
-        const user = results[0] as { password_hash: string };
+        const user = results[0] as {
+            role: any; password_hash: string 
+};
   
         bcrypt.compare(password_hash, user.password_hash, function(err:Error|undefined, result:Boolean) {
           if (err) {
@@ -44,8 +46,9 @@ export const loginUser = async (req: Request, res: Response, next: (() => void))
             const userData = {
                 email: email,
                 username: username,
+                role:user.role
               };
-
+              console.log("userData.role:" + userData.role)
               generateToken(req, res, userData, () => {
                 });
                 const token = req.myToken;
@@ -125,6 +128,14 @@ export const SignUpUser = async(req:Request, res:Response)=>{
 
     export const accesstoDashboard = async(req:Request, res:Response)=>{
         const token = req.myToken;
-        verifyToken(req, res, ()=>{});
-        res.status(200).json({ message: "Accès autorisé" });
+        verifyToken(req, res, (user) => { console.log(user.role)
+            
+            if (user && user.role === 'coach') {
+              
+              res.status(200).json({ message: "Accès autorisé à la page Dashboard" });
+            } else {
+             
+              res.status(403).json({ message: "Accès refusé. Vous devez être un coach pour accéder à cette page." });
+            }
+          });
       }

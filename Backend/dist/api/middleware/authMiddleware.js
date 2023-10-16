@@ -6,11 +6,11 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const secret = process.env.JWT_SECRET || "";
 const generateToken = (req, res, userData, next) => {
-    // console.log("UserData:", userData);
     const MAX_AGE = 60 * 60 * 24 * 30;
     const token = jwt.sign({
         username: userData.username,
-        email: userData.email
+        email: userData.email,
+        role: userData.role
     }, secret, {
         expiresIn: MAX_AGE
     });
@@ -32,7 +32,8 @@ const verifyToken = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, secret);
         req.decodedToken = decoded;
-        next();
+        console.log("decoded: " + JSON.stringify(decoded, null, 2));
+        next(decoded);
     }
     catch (error) {
         return res.status(401).json({ message: 'Token invalid' });
