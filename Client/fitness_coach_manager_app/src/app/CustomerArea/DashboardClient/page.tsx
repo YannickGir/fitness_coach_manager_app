@@ -17,7 +17,7 @@ export const Dashboard = () => {
         const userSession = localStorage.getItem('userSession');
         const verifyAccessToDashboard = async () => {
       try {
-        const response = await axios.get('http://localhost:8800/api/dashboard', {
+        const response = await axios.get('http://localhost:8800/api/dashboardClient', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ export const Dashboard = () => {
   return (
     <div className="App">
         <div className='wrapper'>
-            <h1 className="custom-h1">Dashboard Coach </h1><br/>
+            <h1 className="custom-h1">Dashboard Client </h1><br/>
             <button onClick={handleLogout}>Déconnexion</button>
             <Link href="./SignUpPage">     Retour à l&aposinscription
     </Link>

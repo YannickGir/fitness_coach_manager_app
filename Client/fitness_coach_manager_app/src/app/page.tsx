@@ -51,8 +51,12 @@ function HomePage() {
                 localStorage.setItem('userSession', username);
                 // Faites ce que vous avez besoin de faire avec le token.
                 alert(JSON.stringify(" vous êtes connecté ! " + username))
-                 
-                    router.push('CoachArea/Dashboard'); 
+                const userData = response.data.userData;
+                console.log("userData.role: " + userData.role);
+                 if (userData.role === "client")
+                    router.push('CustomerArea/DashboardClient'); 
+                else if (userData.role === "coach")
+                    router.push('CoachArea/Dashboard');
                 
                 
         
@@ -91,7 +95,7 @@ if (loading) {
     <div className='wrapper'>
       <h1 className="custom-h1">Welcome to SignInPage</h1>
       <SignInForm onSignIn={handleSignIn} /> <br />
-      <Link href="./SignUpPage">Inscription</Link>
+      <Link href="SignUpPage">Inscription</Link>
     </div>
   );
 }
