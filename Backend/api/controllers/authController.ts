@@ -52,7 +52,7 @@ export const loginUser = async (req: Request, res: Response, next: (() => void))
               generateToken(req, res, userData, () => {
                 });
                 const token = req.myToken;
-                res.status(200).json({ message: "Login successful", token });
+                res.status(200).json({ message: "Login successful", token, userData});
               return; 
           } else {
             return res.status(401).json({ message: "L'authentification a échoué. Vérifiez vos informations d'identification." });
@@ -132,10 +132,24 @@ export const SignUpUser = async(req:Request, res:Response)=>{
             
             if (user && user.role === 'coach') {
               
-              res.status(200).json({ message: "Accès autorisé à la page Dashboard" });
+              res.status(200).json({ message: "Accès autorisé à la page Dashboard du coach" });
             } else {
              
               res.status(403).json({ message: "Accès refusé. Vous devez être un coach pour accéder à cette page." });
+            }
+          });
+      }
+
+      export const accesstoDashboardClient = async(req:Request, res:Response)=>{
+        const token = req.myToken;
+        verifyToken(req, res, (user) => { console.log(user.role)
+            
+            if (user && user.role === 'client') {
+              
+              res.status(200).json({ message: "Accès autorisé à la page Dashboard du client" });
+            } else {
+             
+              res.status(403).json({ message: "Accès refusé. Vous devez être un client pour accéder à cette page." });
             }
           });
       }

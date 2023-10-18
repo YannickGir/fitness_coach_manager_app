@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.accesstoDashboard = exports.logoutMiddleware = exports.SignUpUser = exports.userAuthenticated = exports.loginUser = exports.getUsers = void 0;
+exports.accesstoDashboardClient = exports.accesstoDashboard = exports.logoutMiddleware = exports.SignUpUser = exports.userAuthenticated = exports.loginUser = exports.getUsers = void 0;
 const database_1 = __importDefault(require("../../config/database"));
 const db = (0, database_1.default)();
 const authMiddleware_1 = require("../middleware/authMiddleware");
@@ -55,7 +55,7 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                     (0, authMiddleware_1.generateToken)(req, res, userData, () => {
                     });
                     const token = req.myToken;
-                    res.status(200).json({ message: "Login successful", token });
+                    res.status(200).json({ message: "Login successful", token, userData });
                     return;
                 }
                 else {
@@ -126,15 +126,25 @@ const accesstoDashboard = (req, res) => __awaiter(void 0, void 0, void 0, functi
     const token = req.myToken;
     (0, authMiddleware_1.verifyToken)(req, res, (user) => {
         console.log(user.role);
-        // Assurez-vous que l'utilisateur a le rôle "coach" pour accéder à la page Dashboard.
         if (user && user.role === 'coach') {
-            // L'utilisateur a le rôle de coach, autorisez l'accès à la page Dashboard.
-            res.status(200).json({ message: "Accès autorisé à la page Dashboard" });
+            res.status(200).json({ message: "Accès autorisé à la page Dashboard du coach" });
         }
         else {
-            // L'utilisateur n'a pas le rôle de coach, renvoyez une réponse non autorisée.
             res.status(403).json({ message: "Accès refusé. Vous devez être un coach pour accéder à cette page." });
         }
     });
 });
 exports.accesstoDashboard = accesstoDashboard;
+const accesstoDashboardClient = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = req.myToken;
+    (0, authMiddleware_1.verifyToken)(req, res, (user) => {
+        console.log(user.role);
+        if (user && user.role === 'client') {
+            res.status(200).json({ message: "Accès autorisé à la page Dashboard du client" });
+        }
+        else {
+            res.status(403).json({ message: "Accès refusé. Vous devez être un client pour accéder à cette page." });
+        }
+    });
+});
+exports.accesstoDashboardClient = accesstoDashboardClient;

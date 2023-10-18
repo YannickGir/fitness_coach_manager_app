@@ -18,7 +18,7 @@ const db = createDatabaseConnection();
 const corsOptions = {
     origin: 'http://localhost:3000',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // Si vous utilisez des cookies ou des informations d'authentification.
+    credentials: true, // utilisation de cookies ou informations d'authentification.
   };
 app.use(cookieParser());
 app.use(cors(corsOptions));

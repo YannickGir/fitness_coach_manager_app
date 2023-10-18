@@ -2,7 +2,7 @@
 //authRoutes
 
 import express from 'express';
-import { loginUser, getUsers, SignUpUser, userAuthenticated,logoutMiddleware,accesstoDashboard } from '../controllers/authController';
+import { loginUser, getUsers, SignUpUser, userAuthenticated,logoutMiddleware,accesstoDashboard, accesstoDashboardClient } from '../controllers/authController';
 import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import { verifyToken } from '../middleware/authMiddleware';
@@ -53,6 +53,7 @@ router.post('/logout', logoutMiddleware, (req, res) => {
   });
 
   router.get('/dashboard', accesstoDashboard);
+  router.get('/dashboardClient', accesstoDashboardClient);
   
   module.exports = router;
   
